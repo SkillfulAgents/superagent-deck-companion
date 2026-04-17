@@ -1,0 +1,34 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      # node-hid (via @elgato-stream-deck/node) needs libudev headers to
+      # install its native bindings on Linux even when we aren't going to
+      # actually talk to a device.
+      - name: Install system deps
+        run: sudo apt-get update && sudo apt-get install -y libudev-dev
+
+      - run: npm ci
+
+      - name: Typecheck
+        run: npx tsc --noEmit
+
+      - run: npm run build
+
+      # Render every button state to PNGs without any hardware; fails fast
+      # if the renderer regresses.
+      - run: npm run preview

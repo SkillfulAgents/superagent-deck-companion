@@ -2,6 +2,7 @@ import {
 	listStreamDecks,
 	openStreamDeck,
 } from "@elgato-stream-deck/node";
+import { getStreamDeckModelName } from "@elgato-stream-deck/core";
 import type {
 	StreamDeckButtonControlDefinitionLcdFeedback,
 	StreamDeckButtonControlDefinitionRgbFeedback,
@@ -39,8 +40,7 @@ export class ElgatoStreamDeckNeoDevice implements CompanionDevice {
 		this.disconnectReported = false;
 		const devices = await this.listDevices();
 		const target = devices.find((device) =>
-			device.model?.toLowerCase().includes(SUPPORTED_MODEL_HINT) ||
-			device.productName?.toLowerCase().includes(SUPPORTED_MODEL_HINT),
+			device.model?.toLowerCase().includes(SUPPORTED_MODEL_HINT),
 		) ?? devices[0];
 
 		if (!target) {
@@ -51,7 +51,8 @@ export class ElgatoStreamDeckNeoDevice implements CompanionDevice {
 			);
 		}
 
-		console.log(`[Device] Connecting to ${target.productName ?? target.model ?? "Stream Deck Neo"} (${target.serialNumber})`);
+		const displayName = target.model ? getStreamDeckModelName(target.model) : "Stream Deck Neo";
+		console.log(`[Device] Connecting to ${displayName} (${target.serialNumber ?? "unknown serial"})`);
 
 		try {
 			this.deck = await openStreamDeck(target.path);

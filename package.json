@@ -3,6 +3,15 @@
 	"version": "1.0.0",
 	"description": "Ghost-light Stream Deck Neo companion for SuperAgent",
 	"type": "module",
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/SkillfulAgents/superagent-deck-companion.git"
+	},
+	"bugs": {
+		"url": "https://github.com/SkillfulAgents/superagent-deck-companion/issues"
+	},
+	"homepage": "https://github.com/SkillfulAgents/superagent-deck-companion#readme",
 	"scripts": {
 		"build": "tsup src/index.ts src/diagnose.ts src/preview.ts --format esm --clean --out-dir dist",
 		"dev": "tsx src/index.ts",
