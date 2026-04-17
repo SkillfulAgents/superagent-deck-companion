@@ -8,7 +8,7 @@ Works as a **dedicated controller mode** — it takes over the device from Elgat
 
 - Node.js 20+
 - Elgato Stream Deck Neo (other Stream Deck models are not supported yet)
-- A local [SuperAgent](https://github.com/SkillfulAgents/SuperAgent) instance (any port in `49000-49099`; auto-discovered)
+- A local [SuperAgent](https://github.com/SkillfulAgents/SuperAgent) instance (any port in `47891-47990`; auto-discovered)
 
 ## Quick start
 
@@ -19,7 +19,7 @@ npm run dev
 
 The companion will:
 
-1. Probe `127.0.0.1:49000-49099` in parallel (≤ 400 ms) for SuperAgent's local API.
+1. Probe `127.0.0.1:47891-47990` in parallel (≤ 400 ms) for SuperAgent's local API.
 2. Claim the Stream Deck Neo via HID.
 3. Start the 10 fps render loop and subscribe to agent / session SSE streams.
 
@@ -50,9 +50,9 @@ If SuperAgent isn't running yet, the companion keeps retrying with exponential b
 
 Runtime config is resolved in this order (first match wins):
 
-1. Env: `SUPERAGENT_API_URL`, `SUPERAGENT_PORT`, `SUPERAGENT_PROTOCOL`
+1. Env: `SUPERAGENT_API_BASE_URL`, `SUPERAGENT_PORT`, `SUPERAGENT_PROTOCOL`
 2. `~/.superagent-deck-companion/companion.config.json`
-3. Parallel port scan on `127.0.0.1:49000-49099`
+3. Parallel port scan on `127.0.0.1:47891-47990`
 
 UI state (focused agent, current page) is persisted to `~/.superagent-deck-companion/state.json` and restored on restart.
 
