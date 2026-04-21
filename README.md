@@ -25,6 +25,23 @@ The companion will:
 
 If SuperAgent isn't running yet, the companion keeps retrying with exponential backoff — start SuperAgent any time and it'll pick up automatically.
 
+### Using with SuperAgent Electron dev
+
+If you're running the SuperAgent desktop app in Electron development mode, start SuperAgent with:
+
+```bash
+cd ../SuperAgent
+npm run dev:electron
+```
+
+Then start this companion with the matching dev protocol:
+
+```bash
+npm run dev:dev-protocol
+```
+
+`SuperAgent` uses `superagent-dev://` in Electron dev mode, so the companion must use `npm run dev:dev-protocol` instead of plain `npm run dev`.
+
 ## Scripts
 
 | Command | What it does |
