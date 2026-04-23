@@ -1,5 +1,5 @@
 import { SessionActivityMonitor } from "./session-activity-monitor.js";
-import type { AgentInfo, ApiAgent, ActivityDetail, ActivityStatus, SSEEvent } from "./types.js";
+import type { AgentInfo, ApiAgent, ActivityDetail, ActivityStatus, SSEEvent, UserSettingsData } from "./types.js";
 
 export type AgentChangeHandler = (agents: AgentInfo[]) => void;
 export type AgentCompleteHandler = (agentName: string, agentSlug: string) => void;
@@ -11,6 +11,25 @@ const POLL_FAILURE_THRESHOLD = 5;
 const SSE_IDLE_TIMEOUT_MS = 30_000;
 const SSE_BACKOFF_BASE_MS = 1_000;
 const SSE_BACKOFF_MAX_MS = 30_000;
+
+function applyAgentOrder(agents: AgentInfo[], savedOrder: string[] | undefined): AgentInfo[] {
+	if (!savedOrder || savedOrder.length === 0) return agents;
+
+	const positionMap = new Map(savedOrder.map((slug, index) => [slug, index]));
+	const ordered: AgentInfo[] = [];
+	const newAgents: AgentInfo[] = [];
+
+	for (const agent of agents) {
+		if (positionMap.has(agent.slug)) {
+			ordered.push(agent);
+		} else {
+			newAgents.push(agent);
+		}
+	}
+
+	ordered.sort((a, b) => positionMap.get(a.slug)! - positionMap.get(b.slug)!);
+	return [...newAgents, ...ordered];
+}
 
 export class AgentMonitor {
 	private agents: AgentInfo[] = [];
@@ -66,18 +85,27 @@ export class AgentMonitor {
 
 	private async poll(): Promise<void> {
 		try {
-			const res = await fetch(`${this.apiBase}/api/agents`);
-			if (!res.ok) {
+			const [agentsRes, settingsRes] = await Promise.all([
+				fetch(`${this.apiBase}/api/agents`),
+				fetch(`${this.apiBase}/api/user-settings`).catch(() => null),
+			]);
+
+			if (!agentsRes.ok) {
 				this.registerPollFailure();
 				return;
 			}
 
-			const raw = (await res.json()) as ApiAgent[];
-			const agents: AgentInfo[] = raw.map((a) => ({
+			const raw = (await agentsRes.json()) as ApiAgent[];
+			const agentOrder =
+				settingsRes?.ok
+					? ((await settingsRes.json()) as UserSettingsData | null)?.agentOrder
+					: undefined;
+
+			const agents = applyAgentOrder(raw.map((a) => ({
 				slug: a.slug,
 				name: a.name,
 				activityStatus: this.deriveStatus(a),
-			}));
+			})), agentOrder);
 
 			this.agents = agents.map((agent) => this.applyDetail(agent));
 			this.onChange(this.agents);

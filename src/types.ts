@@ -16,6 +16,11 @@ export interface ApiAgent {
 	status: "running" | "stopped";
 	hasActiveSessions: boolean;
 	hasSessionsAwaitingInput: boolean;
+	createdAt?: string;
+}
+
+export interface UserSettingsData {
+	agentOrder?: string[];
 }
 
 export interface SSEEvent {
