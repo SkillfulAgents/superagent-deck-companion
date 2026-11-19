@@ -1,6 +1,6 @@
 # SuperAgent Stream Deck Companion
 
-Ghost-light background companion that turns an **Elgato Stream Deck Neo** into a live control surface for [SuperAgent](https://github.com/SkillfulAgents/SuperAgent). Each LCD key mirrors one agent: current status, activity (browser use / computer use / compacting / awaiting input), token/cost sparkline, and a deep-link jump to that agent's latest session.
+Ghost-light background companion that turns an **Elgato Stream Deck Neo** into a live control surface for [SuperAgent](https://github.com/SkillfulAgents/Gamut). Each LCD key mirrors one agent: current status, activity (browser use / computer use / compacting / awaiting input), token/cost sparkline, and a deep-link jump to that agent's latest session.
 
 Works as a **dedicated controller mode** — it takes over the device from Elgato's official Stream Deck app. Close that app before running this one.
 
@@ -8,7 +8,7 @@ Works as a **dedicated controller mode** — it takes over the device from Elgat
 
 - Node.js 20+
 - Elgato Stream Deck Neo (other Stream Deck models are not supported yet)
-- A local [SuperAgent](https://github.com/SkillfulAgents/SuperAgent) instance (any port in `47891-47990`; auto-discovered)
+- A local [SuperAgent](https://github.com/SkillfulAgents/Gamut) instance (any port in `47891-47990`; auto-discovered)
 
 ## Quick start
 
